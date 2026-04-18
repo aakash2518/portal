@@ -27,11 +27,11 @@ const MONTHS = [
 ];
 
 const PROGRAMS = [
-  "CO-CURRICULAR MORNING / 10 to 12",
-  "CO-CURRICULAR EVENING / 4 to 6",
-  "YOGA MORNING",
-  "YOGA EVENING",
-  "FITNESS PROGRAM",
+  "Filial Love",
+  "Hacer Morning",
+  "Hacer Evening",
+  "Walk-in Daycare",
+  "Gravida Bambino",
 ];
 
 export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeFormData) => void; isLoading: boolean }) {
