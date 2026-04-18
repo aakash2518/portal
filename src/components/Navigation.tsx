@@ -18,25 +18,25 @@ export default function Navigation() {
   return (
     <nav className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo and Brand */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-4">
             <div className="flex-shrink-0">
               <Image 
                 src="/images/logo.png" 
                 alt="Sonehra Wellness Logo" 
-                width={40}
-                height={40}
+                width={60}
+                height={60}
                 className="object-contain"
                 priority
               />
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-xl font-bold text-primary">Sonehra Wellness</h1>
+              <h1 className="text-2xl font-bold text-primary">Sonehra Wellness</h1>
               <p className="text-xs text-muted-foreground">Fee Management Portal</p>
             </div>
             <div className="sm:hidden">
-              <h1 className="text-lg font-bold text-primary">Sonehra Wellness</h1>
+              <h1 className="text-xl font-bold text-primary">Sonehra Wellness</h1>
             </div>
           </div>
 
