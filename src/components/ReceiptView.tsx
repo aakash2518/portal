@@ -32,9 +32,9 @@ function SingleReceipt({ data, copyType }: { data: ReceiptData; copyType: string
   return (
     <div className="border-2 border-black p-3 text-[11px] leading-tight" style={{ fontFamily: 'Arial, Helvetica, sans-serif', width: '370px' }}>
       {/* Header */}
-      <div className="flex items-center pb-2 mb-1 border-b border-black">
-        <div className="w-[80px] h-[50px] flex items-center justify-center mr-2 shrink-0">
-          <img src="/images/logo.png" alt="Logo" className="max-h-[50px] max-w-[80px] object-contain" crossOrigin="anonymous" />
+      <div className="flex items-center justify-center pb-2 mb-1 border-b border-black">
+        <div className="w-[100px] h-[70px] flex items-center justify-center mr-3 shrink-0">
+          <img src="/images/logo.png" alt="Logo" className="max-h-[70px] max-w-[100px] object-contain" crossOrigin="anonymous" />
         </div>
         <div className="flex-1 text-center">
           <h2 className="text-[15px] font-bold tracking-wide leading-tight">SONEHRA WELLNESS</h2>
@@ -42,6 +42,7 @@ function SingleReceipt({ data, copyType }: { data: ReceiptData; copyType: string
           <p className="text-[9px] leading-tight">GST : 06APXPK5623B3ZS</p>
           <p className="text-[9px] leading-tight">Phone No. - 9220809902</p>
         </div>
+        <div className="w-[100px] shrink-0"></div>
       </div>
 
       {/* Title */}
