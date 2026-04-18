@@ -142,17 +142,24 @@ export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeF
 
           {/* GST Preview */}
           {feeNum > 0 && (
-            <div className="col-span-full bg-muted rounded-lg p-3 text-sm space-y-1">
-              <p>Net Amount: <strong>₹{netAmount}</strong></p>
-              <p>CGST (9%): <strong>₹{cgst}</strong></p>
-              <p>SGST (9%): <strong>₹{sgst}</strong></p>
-              <p>Total: <strong>₹{total}</strong></p>
+            <div className="col-span-full bg-muted rounded-lg p-3 text-sm space-y-1 animate-in fade-in">
+              <p className="flex justify-between"><span>Net Amount:</span> <strong>₹{netAmount}</strong></p>
+              <p className="flex justify-between"><span>CGST (9%):</span> <strong>₹{cgst}</strong></p>
+              <p className="flex justify-between"><span>SGST (9%):</span> <strong>₹{sgst}</strong></p>
+              <p className="flex justify-between border-t pt-1 mt-1"><span>Total:</span> <strong className="text-primary">₹{total}</strong></p>
             </div>
           )}
 
           <div className="col-span-full">
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Generating Receipt..." : "Generate Receipt"}
+            <Button type="submit" className="w-full transition-all hover:scale-[1.02]" disabled={isLoading}>
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full"></span>
+                  Generating Receipt...
+                </span>
+              ) : (
+                "Generate Receipt"
+              )}
             </Button>
           </div>
         </form>

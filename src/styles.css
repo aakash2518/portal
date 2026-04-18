@@ -235,3 +235,23 @@ button, a, input, select, textarea {
     backdrop-filter: blur(10px);
   }
 }
+
+/* Receipt specific styles */
+.receipt-container {
+  font-family: Arial, Helvetica, sans-serif;
+  width: 370px;
+}
+
+.receipt-title-bg {
+  background-color: #d4a017;
+  color: #000;
+}
+
+.receipt-fee-header-bg {
+  background-color: #4a7c3f;
+  color: #fff;
+}
+
+.receipt-paid-bg {
+  background-color: #d4edda;
+}

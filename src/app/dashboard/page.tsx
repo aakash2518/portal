@@ -65,8 +65,9 @@ export default function DashboardPage() {
             </div>
             <p className="text-destructive mb-4 font-medium">{error}</p>
             <button 
+              type="button"
               onClick={() => window.location.reload()} 
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-all hover:scale-105"
             >
               Refresh Page
             </button>

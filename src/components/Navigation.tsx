@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, LayoutDashboard, FileText, Menu, X } from "lucide-react";
+import { Home, LayoutDashboard, Menu, X } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
 
@@ -16,12 +16,12 @@ export default function Navigation() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 shadow-sm">
+    <nav className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur supports-backdrop-filter:bg-card/60 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo and Brand */}
           <div className="flex items-center space-x-4">
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <Image 
                 src="/images/logo.png" 
                 alt="Sonehra Wellness Logo" 
@@ -67,8 +67,10 @@ export default function Navigation() {
           {/* Mobile menu button */}
           <div className="md:hidden">
             <button
+              type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+              aria-label="Toggle menu"
             >
               {mobileMenuOpen ? (
                 <X className="h-6 w-6" />

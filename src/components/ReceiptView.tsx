@@ -30,7 +30,7 @@ function SingleReceipt({ data, copyType }: { data: ReceiptData; copyType: string
   const qrValue = `${baseUrl}/receipt/${data.receipt_number}`;
 
   return (
-    <div className="border-2 border-black p-3 text-[11px] leading-tight" style={{ fontFamily: 'Arial, Helvetica, sans-serif', width: '370px' }}>
+    <div className="receipt-container border-2 border-black p-3 text-[11px] leading-tight">
       {/* Header */}
       <div className="flex items-center justify-center pb-2 mb-1 border-b border-black">
         <div className="w-[100px] h-[70px] flex items-center justify-center mr-3 shrink-0">
@@ -46,7 +46,7 @@ function SingleReceipt({ data, copyType }: { data: ReceiptData; copyType: string
       </div>
 
       {/* Title */}
-      <div className="text-center font-bold text-[12px] py-1 mb-1" style={{ backgroundColor: '#d4a017', color: '#000' }}>
+      <div className="receipt-title-bg text-center font-bold text-[12px] py-1 mb-1">
         Fee Receipt - 2025-26 ({copyType})
       </div>
 
@@ -91,7 +91,7 @@ function SingleReceipt({ data, copyType }: { data: ReceiptData; copyType: string
       {/* Fee Breakdown */}
       <table className="w-full border-collapse text-[10px]">
         <thead>
-          <tr style={{ backgroundColor: '#4a7c3f', color: '#fff' }}>
+          <tr className="receipt-fee-header-bg">
             <th className="border border-black p-[3px] text-left font-bold">Fee Type</th>
             <th className="border border-black p-[3px] text-right font-bold">Amount</th>
           </tr>
@@ -117,7 +117,7 @@ function SingleReceipt({ data, copyType }: { data: ReceiptData; copyType: string
             <td className="border border-black p-[3px]">SGST (9 %)</td>
             <td className="border border-black p-[3px] text-right">Rs. {data.sgst_amount.toFixed(0)}/-</td>
           </tr>
-          <tr className="font-bold" style={{ backgroundColor: '#d4edda' }}>
+          <tr className="receipt-paid-bg font-bold">
             <td className="border border-black p-[3px]">Paid</td>
             <td className="border border-black p-[3px] text-right">
               Rs. {data.paid_amount.toFixed(0)}/-

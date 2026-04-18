@@ -133,15 +133,22 @@ export default function Home() {
                 <Button 
                   onClick={handleDownloadPDF} 
                   disabled={isPdfGenerating}
-                  className="transition-all"
+                  className="transition-all hover:scale-105"
                 >
                   <Download className="h-4 w-4 mr-2" />
-                  {isPdfGenerating ? "Generating..." : "Download PDF"}
+                  {isPdfGenerating ? (
+                    <span className="flex items-center gap-2">
+                      <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full"></span>
+                      Generating...
+                    </span>
+                  ) : (
+                    "Download PDF"
+                  )}
                 </Button>
                 <Button 
                   variant="outline" 
                   onClick={() => setReceipt(null)}
-                  className="transition-all"
+                  className="transition-all hover:scale-105"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   New Receipt
