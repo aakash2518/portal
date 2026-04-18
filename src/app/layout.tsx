@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/images/school-logo.png" />
+        <link rel="icon" href="/images/logo.png" />
       </head>
       <body className="antialiased">
         {children}

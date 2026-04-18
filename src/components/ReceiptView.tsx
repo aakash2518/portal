@@ -34,7 +34,7 @@ function SingleReceipt({ data, copyType }: { data: ReceiptData; copyType: string
       {/* Header */}
       <div className="flex items-center pb-2 mb-1 border-b border-black">
         <div className="w-[80px] h-[50px] flex items-center justify-center mr-2 shrink-0">
-          <img src="/images/school-logo.png" alt="Logo" className="max-h-[50px] max-w-[80px] object-contain" crossOrigin="anonymous" />
+          <img src="/images/logo.png" alt="Logo" className="max-h-[50px] max-w-[80px] object-contain" crossOrigin="anonymous" />
         </div>
         <div className="flex-1 text-center">
           <h2 className="text-[15px] font-bold tracking-wide leading-tight">SONEHRA WELLNESS</h2>

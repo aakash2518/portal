@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, LayoutDashboard, FileText, Menu, X } from "lucide-react";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -21,13 +22,13 @@ export default function Navigation() {
           {/* Logo and Brand */}
           <div className="flex items-center space-x-3">
             <div className="flex-shrink-0">
-              <img 
-                src="/images/school-logo.png" 
+              <Image 
+                src="/images/logo.png" 
                 alt="Sonehra Wellness Logo" 
-                className="h-10 w-10 object-contain"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
+                width={40}
+                height={40}
+                className="object-contain"
+                priority
               />
             </div>
             <div className="hidden sm:block">
