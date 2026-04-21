@@ -11,6 +11,7 @@ export interface ReceiptData {
   enrollment_number: string;
   mobile_number: string;
   month: string;
+  year: string;
   fee_amount: number;
   net_amount: number;
   cgst_amount: number;
@@ -72,7 +73,10 @@ function SingleReceipt({ data, copyType }: { data: ReceiptData; copyType: string
           </tr>
           <tr>
             <td className="border border-black p-[3px]">Month : <strong>{data.month}</strong></td>
-            <td className="border border-black p-[3px]">Mob No. : <strong>{data.mobile_number}</strong></td>
+            <td className="border border-black p-[3px]">Year : <strong>{data.year}</strong></td>
+          </tr>
+          <tr>
+            <td className="border border-black p-[3px]" colSpan={2}>Mob No. : <strong>{data.mobile_number}</strong></td>
           </tr>
           <tr>
             <td className="border border-black p-[3px]">Pay Mode : <strong>{data.pay_mode}</strong></td>

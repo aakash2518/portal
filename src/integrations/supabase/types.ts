@@ -27,6 +27,7 @@ export type Database = {
           id: string
           mobile_number: string
           month: string
+          year: string | null
           net_amount: number
           paid_amount: number
           parent_name: string
@@ -53,6 +54,7 @@ export type Database = {
           id?: string
           mobile_number: string
           month: string
+          year?: string | null
           net_amount: number
           paid_amount: number
           parent_name: string
@@ -79,6 +81,7 @@ export type Database = {
           id?: string
           mobile_number?: string
           month?: string
+          year?: string | null
           net_amount?: number
           paid_amount?: number
           parent_name?: string
