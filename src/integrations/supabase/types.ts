@@ -21,6 +21,7 @@ export type Database = {
           bank_name: string | null
           cgst_amount: number
           collected_by: string
+          course_duration: string | null
           created_at: string
           enrollment_number: string | null
           fee_amount: number
@@ -47,6 +48,7 @@ export type Database = {
           bank_name?: string | null
           cgst_amount: number
           collected_by?: string
+          course_duration?: string | null
           created_at?: string
           enrollment_number?: string | null
           fee_amount: number
@@ -73,6 +75,7 @@ export type Database = {
           bank_name?: string | null
           cgst_amount?: number
           collected_by?: string
+          course_duration?: string | null
           created_at?: string
           enrollment_number?: string | null
           fee_amount?: number

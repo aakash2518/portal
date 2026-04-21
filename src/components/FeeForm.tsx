@@ -9,6 +9,7 @@ export interface FeeFormData {
   student_name: string;
   parent_name: string;
   program: string;
+  course_duration: string;
   admission_number: string;
   enrollment_number: string;
   mobile_number: string;
@@ -34,11 +35,20 @@ const PROGRAMS = [
   "Gravida Bambino",
 ];
 
+const DURATIONS = [
+  "1 Month",
+  "3 Months",
+  "6 Months",
+  "1 Year",
+  "Others",
+];
+
 export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeFormData) => void; isLoading: boolean }) {
   const [form, setForm] = useState<FeeFormData>({
     student_name: "",
     parent_name: "",
     program: "",
+    course_duration: "1 Month",
     admission_number: "",
     enrollment_number: "",
     mobile_number: "",
@@ -87,6 +97,15 @@ export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeF
               <SelectTrigger><SelectValue placeholder="Select program" /></SelectTrigger>
               <SelectContent>
                 {PROGRAMS.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1.5">
+            <Label>Course Duration *</Label>
+            <Select value={form.course_duration} onValueChange={(v) => handleChange("course_duration", v)}>
+              <SelectTrigger><SelectValue placeholder="Select duration" /></SelectTrigger>
+              <SelectContent>
+                {DURATIONS.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
