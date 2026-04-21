@@ -48,7 +48,7 @@ function SingleReceipt({ data, copyType }: { data: ReceiptData; copyType: string
 
       {/* Title */}
       <div className="receipt-title-bg text-center font-bold text-[12px] py-1 mb-1">
-        Fee Receipt - 2026-27 ({copyType})
+        Fee Receipt - {data.year} ({copyType})
       </div>
 
       {/* Student Details Table */}

@@ -13,6 +13,7 @@ export interface FeeFormData {
   enrollment_number: string;
   mobile_number: string;
   month: string;
+  year: string;
   fee_amount: string;
   pay_mode: string;
   bank_name: string;
@@ -22,8 +23,16 @@ export interface FeeFormData {
 }
 
 const MONTHS = [
-  "April 2026", "May 2026", "June 2026", "July 2026", "August 2026", "September 2026",
-  "October 2026", "November 2026", "December 2026", "January 2027", "February 2027", "March 2027"
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+const YEARS = [
+  "2024-25",
+  "2025-26",
+  "2026-27",
+  "2027-28",
+  "2028-29",
 ];
 
 const PROGRAMS = [
@@ -43,6 +52,7 @@ export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeF
     enrollment_number: "",
     mobile_number: "",
     month: "",
+    year: "2026-27",
     fee_amount: "",
     pay_mode: "Online",
     bank_name: "",
@@ -108,6 +118,15 @@ export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeF
               <SelectTrigger><SelectValue placeholder="Select month" /></SelectTrigger>
               <SelectContent>
                 {MONTHS.map((m) => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1.5">
+            <Label>Year *</Label>
+            <Select value={form.year} onValueChange={(v) => handleChange("year", v)}>
+              <SelectTrigger><SelectValue placeholder="Select year" /></SelectTrigger>
+              <SelectContent>
+                {YEARS.map((y) => <SelectItem key={y} value={y}>{y}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>

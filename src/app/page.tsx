@@ -60,7 +60,7 @@ export default function Home() {
         enrollment_number: data.enrollment_number || "",
         mobile_number: data.mobile_number,
         month: data.month,
-        year: data.year || "2026",
+        year: data.year || "2026-27",
         fee_amount: data.fee_amount,
         net_amount: data.net_amount,
         cgst_amount: data.cgst_amount,

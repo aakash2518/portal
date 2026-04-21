@@ -27,7 +27,6 @@ export type Database = {
           id: string
           mobile_number: string
           month: string
-          year: string | null
           net_amount: number
           paid_amount: number
           parent_name: string
@@ -41,6 +40,7 @@ export type Database = {
           txn_date: string | null
           txn_number: string | null
           updated_at: string
+          year: string | null
         }
         Insert: {
           admission_number?: string | null
@@ -54,7 +54,6 @@ export type Database = {
           id?: string
           mobile_number: string
           month: string
-          year?: string | null
           net_amount: number
           paid_amount: number
           parent_name: string
@@ -68,6 +67,7 @@ export type Database = {
           txn_date?: string | null
           txn_number?: string | null
           updated_at?: string
+          year?: string | null
         }
         Update: {
           admission_number?: string | null
@@ -81,7 +81,6 @@ export type Database = {
           id?: string
           mobile_number?: string
           month?: string
-          year?: string | null
           net_amount?: number
           paid_amount?: number
           parent_name?: string
@@ -95,6 +94,7 @@ export type Database = {
           txn_date?: string | null
           txn_number?: string | null
           updated_at?: string
+          year?: string | null
         }
         Relationships: []
       }
