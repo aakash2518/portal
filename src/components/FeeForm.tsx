@@ -60,7 +60,7 @@ export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeF
   };
 
   const feeNum = parseFloat(form.fee_amount) || 0;
-  const netAmount = Math.round(feeNum / 1.18);
+  const netAmount = Math.round(feeNum);
   const cgst = Math.round(netAmount * 0.09);
   const sgst = Math.round(netAmount * 0.09);
   const total = netAmount + cgst + sgst;
@@ -111,8 +111,8 @@ export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeF
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label>Fee Amount (Total incl. GST) *</Label>
-            <Input required type="number" min="0" step="0.01" value={form.fee_amount} onChange={(e) => handleChange("fee_amount", e.target.value)} />
+            <Label>Fee Amount (Base Amount) *</Label>
+            <Input required type="number" min="0" step="0.01" value={form.fee_amount} onChange={(e) => handleChange("fee_amount", e.target.value)} placeholder="Enter base amount" />
           </div>
           <div className="space-y-1.5">
             <Label>Pay Mode</Label>
@@ -142,10 +142,10 @@ export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeF
           {/* GST Preview */}
           {feeNum > 0 && (
             <div className="col-span-full bg-muted rounded-lg p-3 text-sm space-y-1 animate-in fade-in">
-              <p className="flex justify-between"><span>Net Amount:</span> <strong>₹{netAmount}</strong></p>
+              <p className="flex justify-between"><span>Base Amount:</span> <strong>₹{netAmount}</strong></p>
               <p className="flex justify-between"><span>CGST (9%):</span> <strong>₹{cgst}</strong></p>
               <p className="flex justify-between"><span>SGST (9%):</span> <strong>₹{sgst}</strong></p>
-              <p className="flex justify-between border-t pt-1 mt-1"><span>Total:</span> <strong className="text-primary">₹{total}</strong></p>
+              <p className="flex justify-between border-t pt-1 mt-1"><span>Total Amount (with GST):</span> <strong className="text-primary text-lg">₹{total}</strong></p>
             </div>
           )}
 

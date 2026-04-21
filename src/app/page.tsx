@@ -20,7 +20,7 @@ export default function Home() {
     setIsLoading(true);
     try {
       const feeAmount = parseFloat(formData.fee_amount) || 0;
-      const netAmount = Math.round(feeAmount / 1.18);
+      const netAmount = Math.round(feeAmount);
       const cgst = Math.round(netAmount * 0.09);
       const sgst = Math.round(netAmount * 0.09);
       const totalAmount = netAmount + cgst + sgst;
