@@ -7,7 +7,6 @@ export interface ReceiptData {
   student_name: string;
   parent_name: string;
   program: string;
-  course_duration: string;
   admission_number: string;
   enrollment_number: string;
   mobile_number: string;
@@ -68,15 +67,12 @@ function SingleReceipt({ data, copyType }: { data: ReceiptData; copyType: string
             <td className="border border-black p-[3px]" colSpan={2}>Program : <strong>{data.program}</strong></td>
           </tr>
           <tr>
-            <td className="border border-black p-[3px]">Course Duration : <strong>{data.course_duration}</strong></td>
-            <td className="border border-black p-[3px]">Month : <strong>{data.month}</strong></td>
-          </tr>
-          <tr>
             <td className="border border-black p-[3px]">Admission No. : {data.admission_number}</td>
             <td className="border border-black p-[3px]">ENROLLMENT NO. : {data.enrollment_number}</td>
           </tr>
           <tr>
-            <td className="border border-black p-[3px]" colSpan={2}>Mob No. : <strong>{data.mobile_number}</strong></td>
+            <td className="border border-black p-[3px]">Month : <strong>{data.month}</strong></td>
+            <td className="border border-black p-[3px]">Mob No. : <strong>{data.mobile_number}</strong></td>
           </tr>
           <tr>
             <td className="border border-black p-[3px]">Pay Mode : <strong>{data.pay_mode}</strong></td>

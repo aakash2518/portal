@@ -9,7 +9,6 @@ export interface FeeFormData {
   student_name: string;
   parent_name: string;
   program: string;
-  course_duration: string;
   admission_number: string;
   enrollment_number: string;
   mobile_number: string;
@@ -22,9 +21,8 @@ export interface FeeFormData {
   collected_by: string;
 }
 
-const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+const DURATION = [
+  "1 Month", "3 Month","other"
 ];
 
 const PROGRAMS = [
@@ -35,20 +33,11 @@ const PROGRAMS = [
   "Gravida Bambino",
 ];
 
-const DURATIONS = [
-  "1 Month",
-  "3 Months",
-  "6 Months",
-  "1 Year",
-  "Others",
-];
-
 export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeFormData) => void; isLoading: boolean }) {
   const [form, setForm] = useState<FeeFormData>({
     student_name: "",
     parent_name: "",
     program: "",
-    course_duration: "1 Month",
     admission_number: "",
     enrollment_number: "",
     mobile_number: "",
@@ -101,15 +90,6 @@ export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeF
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label>Course Duration *</Label>
-            <Select value={form.course_duration} onValueChange={(v) => handleChange("course_duration", v)}>
-              <SelectTrigger><SelectValue placeholder="Select duration" /></SelectTrigger>
-              <SelectContent>
-                {DURATIONS.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-1.5">
             <Label>Admission Number</Label>
             <Input value={form.admission_number} onChange={(e) => handleChange("admission_number", e.target.value)} />
           </div>
@@ -126,7 +106,7 @@ export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeF
             <Select value={form.month} onValueChange={(v) => handleChange("month", v)}>
               <SelectTrigger><SelectValue placeholder="Select month" /></SelectTrigger>
               <SelectContent>
-                {MONTHS.map((m) => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                {DURATION.map((m) => <SelectItem key={m} value={m}>{m}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
