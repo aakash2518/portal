@@ -23,8 +23,9 @@ export interface FeeFormData {
 }
 
 const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+  "1 Month",
+  "3 Months",
+  "Other"
 ];
 
 const YEARS = [
@@ -61,13 +62,24 @@ export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeF
     collected_by: "Super Admin",
   });
 
+  const [customMonth, setCustomMonth] = useState("");
+
   const handleChange = (field: keyof FeeFormData, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+    // Reset custom month when changing month selection
+    if (field === "month" && value !== "Other") {
+      setCustomMonth("");
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(form);
+    // If "Other" is selected, use custom month value
+    const finalForm = {
+      ...form,
+      month: form.month === "Other" ? customMonth : form.month
+    };
+    onSubmit(finalForm);
   };
 
   const feeNum = parseFloat(form.fee_amount) || 0;
@@ -121,6 +133,17 @@ export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeF
               </SelectContent>
             </Select>
           </div>
+          {form.month === "Other" && (
+            <div className="space-y-1.5">
+              <Label>Custom Month *</Label>
+              <Input 
+                required 
+                value={customMonth} 
+                onChange={(e) => setCustomMonth(e.target.value)} 
+                placeholder="Enter custom month"
+              />
+            </div>
+          )}
           <div className="space-y-1.5">
             <Label>Year *</Label>
             <Select value={form.year} onValueChange={(v) => handleChange("year", v)}>
