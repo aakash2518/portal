@@ -88,15 +88,25 @@ export default function Home() {
       const element = document.getElementById("receipt-print");
       if (!element) return;
       
+      // Set fixed dimensions for consistent PDF output
+      const originalWidth = element.style.width;
+      const originalHeight = element.style.height;
+      element.style.width = "1122px"; // A4 landscape width in pixels at 96 DPI
+      element.style.height = "794px"; // A4 landscape height in pixels at 96 DPI
+      
       // Capture the receipt as canvas with high quality
       const canvas = await html2canvas(element, { 
-        scale: 3,
+        scale: 2,
         useCORS: true,
         logging: false,
         backgroundColor: '#ffffff',
-        windowWidth: element.scrollWidth,
-        windowHeight: element.scrollHeight,
+        width: 1122,
+        height: 794,
       });
+      
+      // Restore original dimensions
+      element.style.width = originalWidth;
+      element.style.height = originalHeight;
       
       const imgData = canvas.toDataURL("image/png");
       
@@ -112,17 +122,8 @@ export default function Home() {
       const availableWidth = pdfWidth - (2 * margin);
       const availableHeight = pdfHeight - (2 * margin);
       
-      // Calculate image dimensions to fit within margins
-      const imgWidth = availableWidth;
-      const imgHeight = (canvas.height * availableWidth) / canvas.width;
-      
-      // Center vertically if needed
-      const yOffset = imgHeight < availableHeight 
-        ? margin + (availableHeight - imgHeight) / 2 
-        : margin;
-      
-      // Add image to PDF with margins
-      pdf.addImage(imgData, "PNG", margin, yOffset, imgWidth, Math.min(imgHeight, availableHeight));
+      // Add image to PDF with margins, filling available space
+      pdf.addImage(imgData, "PNG", margin, margin, availableWidth, availableHeight);
       
       // Save the PDF
       pdf.save(`Receipt_${receipt?.receipt_number}.pdf`);
