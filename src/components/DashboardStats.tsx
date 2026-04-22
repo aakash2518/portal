@@ -135,11 +135,20 @@ export default function DashboardStats({ receipts, onUpdate }: { receipts: Recei
         .update({ deleted_at: new Date().toISOString() })
         .eq("id", id);
       
-      if (error) throw error;
+      if (error) {
+        console.error("Delete error:", error);
+        if (error.message.includes("column") && error.message.includes("deleted_at")) {
+          alert("Database setup required! Please run the SQL migration first.\n\nCheck DATABASE_SETUP_INSTRUCTIONS.md file for details.");
+        } else {
+          alert(`Failed to delete receipt: ${error.message}`);
+        }
+        return;
+      }
+      
       onUpdate();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting receipt:", error);
-      alert("Failed to delete receipt. Please try again.");
+      alert(`Failed to delete receipt: ${error.message || "Unknown error"}`);
     }
   };
 
@@ -150,11 +159,16 @@ export default function DashboardStats({ receipts, onUpdate }: { receipts: Recei
         .update({ deleted_at: null })
         .eq("id", id);
       
-      if (error) throw error;
+      if (error) {
+        console.error("Restore error:", error);
+        alert(`Failed to restore receipt: ${error.message}`);
+        return;
+      }
+      
       onUpdate();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error restoring receipt:", error);
-      alert("Failed to restore receipt. Please try again.");
+      alert(`Failed to restore receipt: ${error.message || "Unknown error"}`);
     }
   };
 
@@ -167,11 +181,16 @@ export default function DashboardStats({ receipts, onUpdate }: { receipts: Recei
         .delete()
         .eq("id", id);
       
-      if (error) throw error;
+      if (error) {
+        console.error("Permanent delete error:", error);
+        alert(`Failed to delete receipt: ${error.message}`);
+        return;
+      }
+      
       onUpdate();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error permanently deleting receipt:", error);
-      alert("Failed to delete receipt. Please try again.");
+      alert(`Failed to delete receipt: ${error.message || "Unknown error"}`);
     }
   };
 
