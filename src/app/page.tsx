@@ -88,18 +88,36 @@ export default function Home() {
       const element = document.getElementById("receipt-print");
       if (!element) return;
       
+      // Capture the receipt as canvas with high quality
       const canvas = await html2canvas(element, { 
-        scale: 2, 
+        scale: 3,
         useCORS: true,
         logging: false,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        windowWidth: element.scrollWidth,
+        windowHeight: element.scrollHeight,
       });
       
       const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
+      
+      // Create PDF in landscape mode to fit both receipts side by side
+      const pdf = new jsPDF("landscape", "mm", "a4");
+      
+      // A4 landscape dimensions: 297mm x 210mm
       const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      
+      // Calculate image dimensions to fit the page
+      const imgWidth = pdfWidth;
+      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      // Center the image vertically if it's smaller than page height
+      const yOffset = imgHeight < pdfHeight ? (pdfHeight - imgHeight) / 2 : 0;
+      
+      // Add image to PDF
+      pdf.addImage(imgData, "PNG", 0, yOffset, imgWidth, imgHeight);
+      
+      // Save the PDF
       pdf.save(`Receipt_${receipt?.receipt_number}.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
