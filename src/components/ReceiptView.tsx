@@ -151,10 +151,13 @@ function SingleReceipt({ data, copyType }: { data: ReceiptData; copyType: string
 
 export default function ReceiptView({ data }: { data: ReceiptData }) {
   return (
-    <div id="receipt-print" className="bg-white p-4 max-w-[850px] mx-auto">
-      <div className="flex gap-4 justify-center">
+    <div id="receipt-print" className="bg-white p-2 sm:p-4 max-w-[850px] mx-auto">
+      <div className="flex flex-col lg:flex-row gap-4 justify-center items-center lg:items-start">
         <SingleReceipt data={data} copyType="Office Copy" />
         <SingleReceipt data={data} copyType="Student Copy" />
+      </div>
+      <div className="mt-4 text-center text-xs text-muted-foreground lg:hidden">
+        <p>Scroll horizontally to view both copies</p>
       </div>
     </div>
   );

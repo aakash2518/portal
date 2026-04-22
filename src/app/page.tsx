@@ -113,47 +113,50 @@ export default function Home() {
     <div className="min-h-screen bg-background flex flex-col">
       <Navigation />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {!receipt ? (
           <div className="animate-in fade-in duration-500">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-foreground">Create New Receipt</h2>
-              <p className="text-sm text-muted-foreground mt-1">
+            <div className="mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground">Create New Receipt</h2>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                 Fill in the details below to generate a fee receipt
               </p>
             </div>
             <FeeForm onSubmit={handleSubmit} isLoading={isLoading} />
           </div>
         ) : (
-          <div className="space-y-6 animate-in fade-in duration-500">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-card p-4 rounded-lg border shadow-sm">
-              <div>
-                <h2 className="text-xl font-bold text-foreground">Receipt Generated Successfully</h2>
-                <p className="text-sm text-muted-foreground">Receipt #{receipt.receipt_number}</p>
+          <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-500">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 bg-card p-3 sm:p-4 rounded-lg border shadow-sm">
+              <div className="w-full sm:w-auto">
+                <h2 className="text-lg sm:text-xl font-bold text-foreground">Receipt Generated Successfully</h2>
+                <p className="text-xs sm:text-sm text-muted-foreground">Receipt #{receipt.receipt_number}</p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 w-full sm:w-auto">
                 <Button 
                   onClick={handleDownloadPDF} 
                   disabled={isPdfGenerating}
-                  className="transition-all hover:scale-105"
+                  className="flex-1 sm:flex-none transition-all hover:scale-105"
+                  size="sm"
                 >
                   <Download className="h-4 w-4 mr-2" />
                   {isPdfGenerating ? (
                     <span className="flex items-center gap-2">
                       <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full"></span>
-                      Generating...
+                      <span className="hidden sm:inline">Generating...</span>
                     </span>
                   ) : (
-                    "Download PDF"
+                    <span>Download PDF</span>
                   )}
                 </Button>
                 <Button 
                   variant="outline" 
                   onClick={() => setReceipt(null)}
-                  className="transition-all hover:scale-105"
+                  className="flex-1 sm:flex-none transition-all hover:scale-105"
+                  size="sm"
                 >
                   <Plus className="h-4 w-4 mr-2" />
-                  New Receipt
+                  <span className="hidden sm:inline">New Receipt</span>
+                  <span className="sm:hidden">New</span>
                 </Button>
               </div>
             </div>
