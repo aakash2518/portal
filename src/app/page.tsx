@@ -100,22 +100,29 @@ export default function Home() {
       
       const imgData = canvas.toDataURL("image/png");
       
-      // Create PDF in landscape mode to fit both receipts side by side
+      // Create PDF in landscape mode
       const pdf = new jsPDF("landscape", "mm", "a4");
       
       // A4 landscape dimensions: 297mm x 210mm
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       
-      // Calculate image dimensions to fit the page
-      const imgWidth = pdfWidth;
-      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+      // 1cm margin on all sides (10mm)
+      const margin = 10;
+      const availableWidth = pdfWidth - (2 * margin);
+      const availableHeight = pdfHeight - (2 * margin);
       
-      // Center the image vertically if it's smaller than page height
-      const yOffset = imgHeight < pdfHeight ? (pdfHeight - imgHeight) / 2 : 0;
+      // Calculate image dimensions to fit within margins
+      const imgWidth = availableWidth;
+      const imgHeight = (canvas.height * availableWidth) / canvas.width;
       
-      // Add image to PDF
-      pdf.addImage(imgData, "PNG", 0, yOffset, imgWidth, imgHeight);
+      // Center vertically if needed
+      const yOffset = imgHeight < availableHeight 
+        ? margin + (availableHeight - imgHeight) / 2 
+        : margin;
+      
+      // Add image to PDF with margins
+      pdf.addImage(imgData, "PNG", margin, yOffset, imgWidth, Math.min(imgHeight, availableHeight));
       
       // Save the PDF
       pdf.save(`Receipt_${receipt?.receipt_number}.pdf`);

@@ -14,24 +14,26 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchReceipts = async () => {
-      try {
-        const { data, error } = await supabase
-          .from("receipts")
-          .select("*")
-          .order("receipt_number", { ascending: false });
-        
-        if (error) throw error;
-        if (data) setReceipts(data);
-      } catch (err) {
-        console.error("Error fetching receipts:", err);
-        setError("Failed to load receipts. Please refresh the page.");
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchReceipts();
   }, []);
+
+  const fetchReceipts = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from("receipts")
+        .select("*")
+        .order("receipt_number", { ascending: false });
+      
+      if (error) throw error;
+      if (data) setReceipts(data);
+    } catch (err) {
+      console.error("Error fetching receipts:", err);
+      setError("Failed to load receipts. Please refresh the page.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -74,7 +76,7 @@ export default function DashboardPage() {
           </div>
         ) : (
           <div className="animate-in fade-in duration-500">
-            <DashboardStats receipts={receipts} />
+            <DashboardStats receipts={receipts} onUpdate={fetchReceipts} />
           </div>
         )}
       </main>

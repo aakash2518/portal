@@ -22,6 +22,7 @@ export type Database = {
           cgst_amount: number
           collected_by: string
           created_at: string
+          deleted_at: string | null
           enrollment_number: string | null
           fee_amount: number
           id: string
@@ -49,6 +50,7 @@ export type Database = {
           cgst_amount: number
           collected_by?: string
           created_at?: string
+          deleted_at?: string | null
           enrollment_number?: string | null
           fee_amount: number
           id?: string
@@ -76,6 +78,7 @@ export type Database = {
           cgst_amount?: number
           collected_by?: string
           created_at?: string
+          deleted_at?: string | null
           enrollment_number?: string | null
           fee_amount?: number
           id?: string
