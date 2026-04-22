@@ -172,28 +172,6 @@ export default function DashboardStats({ receipts, onUpdate }: { receipts: Recei
     }
   };
 
-  const handlePermanentDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to permanently delete this receipt? This action cannot be undone.")) return;
-    
-    try {
-      const { error } = await supabase
-        .from("receipts")
-        .delete()
-        .eq("id", id);
-      
-      if (error) {
-        console.error("Permanent delete error:", error);
-        alert(`Failed to delete receipt: ${error.message}`);
-        return;
-      }
-      
-      onUpdate();
-    } catch (error: any) {
-      console.error("Error permanently deleting receipt:", error);
-      alert(`Failed to delete receipt: ${error.message || "Unknown error"}`);
-    }
-  };
-
   return (
     <div className="space-y-6">
       {/* Filters Section */}
@@ -335,24 +313,14 @@ export default function DashboardStats({ receipts, onUpdate }: { receipts: Recei
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         ) : (
-                          <div className="flex items-center justify-end gap-1">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleRestore(r.id)}
-                              className="text-green-600 hover:text-green-600 hover:bg-green-50"
-                            >
-                              <RotateCcw className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handlePermanentDelete(r.id)}
-                              className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRestore(r.id)}
+                            className="text-green-600 hover:text-green-600 hover:bg-green-50"
+                          >
+                            <RotateCcw className="h-4 w-4" />
+                          </Button>
                         )}
                       </td>
                     </tr>
@@ -392,24 +360,14 @@ export default function DashboardStats({ receipts, onUpdate }: { receipts: Recei
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         ) : (
-                          <>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleRestore(r.id)}
-                              className="text-green-600 hover:text-green-600 hover:bg-green-50 h-8 w-8 p-0"
-                            >
-                              <RotateCcw className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handlePermanentDelete(r.id)}
-                              className="text-destructive hover:text-destructive hover:bg-destructive/10 h-8 w-8 p-0"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRestore(r.id)}
+                            className="text-green-600 hover:text-green-600 hover:bg-green-50 h-8 w-8 p-0"
+                          >
+                            <RotateCcw className="h-4 w-4" />
+                          </Button>
                         )}
                       </div>
                     </div>
