@@ -58,9 +58,8 @@ export default function ReceiptPage() {
           txn_date: data.txn_date || "",
           collected_by: data.collected_by,
         });
-      } catch (err) {
-        console.error("Error fetching receipt:", err);
-        setError("Failed to load receipt");
+      } catch (err: any) {
+        setError(err?.message || "Failed to load receipt");
       } finally {
         setLoading(false);
       }

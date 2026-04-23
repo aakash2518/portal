@@ -152,22 +152,22 @@
   }
 }
 
-/* Smooth transitions and animations */
+/* Smooth transitions and animations - Optimized */
 @layer utilities {
   .animate-in {
-    animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.2s ease-in-out;
   }
 
   .fade-in {
-    animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.2s ease-in-out;
   }
 
   .slide-in-from-bottom {
-    animation: slideInFromBottom 0.4s ease-out;
+    animation: slideInFromBottom 0.3s ease-out;
   }
 
   .slide-in-from-top {
-    animation: slideInFromTop 0.4s ease-out;
+    animation: slideInFromTop 0.3s ease-out;
   }
 }
 
@@ -183,7 +183,7 @@
 @keyframes slideInFromBottom {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -194,7 +194,7 @@
 @keyframes slideInFromTop {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
@@ -213,12 +213,12 @@ html {
   outline-offset: 2px;
 }
 
-/* Smooth transitions for interactive elements */
+/* Smooth transitions for interactive elements - Optimized */
 button, a, input, select, textarea {
-  transition: all 0.2s ease-in-out;
+  transition: all 0.15s ease-in-out;
 }
 
-/* Loading spinner */
+/* Loading spinner - Optimized */
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -226,7 +226,7 @@ button, a, input, select, textarea {
 }
 
 .animate-spin {
-  animation: spin 1s linear infinite;
+  animation: spin 0.8s linear infinite;
 }
 
 /* Backdrop blur support */
@@ -234,6 +234,18 @@ button, a, input, select, textarea {
   .backdrop-blur {
     backdrop-filter: blur(10px);
   }
+}
+
+/* Hardware acceleration for smooth animations */
+.animate-in,
+.fade-in,
+.slide-in-from-bottom,
+.slide-in-from-top,
+button,
+a {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* Receipt specific styles */

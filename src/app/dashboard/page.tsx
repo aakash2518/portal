@@ -27,9 +27,8 @@ export default function DashboardPage() {
       
       if (error) throw error;
       if (data) setReceipts(data);
-    } catch (err) {
-      console.error("Error fetching receipts:", err);
-      setError("Failed to load receipts. Please refresh the page.");
+    } catch (err: any) {
+      setError(err?.message || "Failed to load receipts. Please refresh the page.");
     } finally {
       setLoading(false);
     }

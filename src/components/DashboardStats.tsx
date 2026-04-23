@@ -2,9 +2,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { IndianRupee, Receipt, TrendingUp, FileText, Trash2, RotateCcw, Calendar } from "lucide-react";
+import { useState, useMemo, useCallback } from "react";
+import { IndianRupee, Receipt, TrendingUp, FileText, Trash2, RotateCcw, Calendar, Eye, Download } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useRouter } from "next/navigation";
+import html2canvas from "html2canvas-pro";
+import { jsPDF } from "jspdf";
 
 interface Receipt {
   id: string;
@@ -39,17 +42,19 @@ const PERIODS = [
 ];
 
 export default function DashboardStats({ receipts, onUpdate }: { receipts: Receipt[]; onUpdate: () => void }) {
+  const router = useRouter();
   const [filterMonth, setFilterMonth] = useState("All");
   const [filterYear, setFilterYear] = useState("All");
   const [filterPeriod, setFilterPeriod] = useState("all");
   const [activeTab, setActiveTab] = useState("active");
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   // Filter receipts based on deleted status
-  const activeReceipts = receipts.filter(r => !r.deleted_at);
-  const deletedReceipts = receipts.filter(r => r.deleted_at);
+  const activeReceipts = useMemo(() => receipts.filter(r => !r.deleted_at), [receipts]);
+  const deletedReceipts = useMemo(() => receipts.filter(r => r.deleted_at), [receipts]);
 
-  // Apply filters
-  const filterByPeriod = (list: Receipt[]) => {
+  // Apply filters with memoization
+  const filterByPeriod = useCallback((list: Receipt[]) => {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     
@@ -72,9 +77,9 @@ export default function DashboardStats({ receipts, onUpdate }: { receipts: Recei
           return true;
       }
     });
-  };
+  }, [filterPeriod]);
 
-  const applyFilters = (list: Receipt[]) => {
+  const applyFilters = useCallback((list: Receipt[]) => {
     let filtered = filterByPeriod(list);
     
     if (filterMonth !== "All") {
@@ -86,47 +91,52 @@ export default function DashboardStats({ receipts, onUpdate }: { receipts: Recei
     }
     
     return filtered;
-  };
+  }, [filterByPeriod, filterMonth, filterYear]);
 
-  const filtered = applyFilters(activeTab === "active" ? activeReceipts : deletedReceipts);
+  const filtered = useMemo(() => 
+    applyFilters(activeTab === "active" ? activeReceipts : deletedReceipts),
+    [applyFilters, activeTab, activeReceipts, deletedReceipts]
+  );
 
-  const totalStudents = filtered.length;
-  const totalRevenue = filtered.reduce((s, r) => s + r.total_amount, 0);
-  const totalGST = filtered.reduce((s, r) => s + r.cgst_amount + r.sgst_amount, 0);
-  const totalPaid = filtered.reduce((s, r) => s + r.paid_amount, 0);
+  const stats = useMemo(() => {
+    const totalStudents = filtered.length;
+    const totalRevenue = filtered.reduce((s, r) => s + r.total_amount, 0);
+    const totalGST = filtered.reduce((s, r) => s + r.cgst_amount + r.sgst_amount, 0);
+    const totalPaid = filtered.reduce((s, r) => s + r.paid_amount, 0);
 
-  const stats = [
-    {
-      title: "Total Receipts",
-      value: totalStudents,
-      icon: FileText,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
-    },
-    {
-      title: "Total Revenue",
-      value: `₹${totalRevenue.toLocaleString()}`,
-      icon: IndianRupee,
-      color: "text-green-600",
-      bgColor: "bg-green-50",
-    },
-    {
-      title: "GST Collected",
-      value: `₹${totalGST.toLocaleString()}`,
-      icon: Receipt,
-      color: "text-orange-600",
-      bgColor: "bg-orange-50",
-    },
-    {
-      title: "Total Paid",
-      value: `₹${totalPaid.toLocaleString()}`,
-      icon: TrendingUp,
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
-    },
-  ];
+    return [
+      {
+        title: "Total Receipts",
+        value: totalStudents,
+        icon: FileText,
+        color: "text-blue-600",
+        bgColor: "bg-blue-50",
+      },
+      {
+        title: "Total Revenue",
+        value: `₹${totalRevenue.toLocaleString()}`,
+        icon: IndianRupee,
+        color: "text-green-600",
+        bgColor: "bg-green-50",
+      },
+      {
+        title: "GST Collected",
+        value: `₹${totalGST.toLocaleString()}`,
+        icon: Receipt,
+        color: "text-orange-600",
+        bgColor: "bg-orange-50",
+      },
+      {
+        title: "Total Paid",
+        value: `₹${totalPaid.toLocaleString()}`,
+        icon: TrendingUp,
+        color: "text-purple-600",
+        bgColor: "bg-purple-50",
+      },
+    ];
+  }, [filtered]);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = useCallback(async (id: string) => {
     if (!confirm("Are you sure you want to move this receipt to bin?")) return;
     
     try {
@@ -136,23 +146,21 @@ export default function DashboardStats({ receipts, onUpdate }: { receipts: Recei
         .eq("id", id);
       
       if (error) {
-        console.error("Delete error:", error);
         if (error.message.includes("column") && error.message.includes("deleted_at")) {
-          alert("Database setup required! Please run the SQL migration first.\n\nCheck DATABASE_SETUP_INSTRUCTIONS.md file for details.");
+          alert("Database setup required!\n\nPlease run the SQL from RUN_THIS_SQL.sql file in your Supabase Dashboard.\n\nCheck README.md for detailed instructions.");
         } else {
-          alert(`Failed to delete receipt: ${error.message}`);
+          alert(`Failed to move receipt to bin: ${error.message}`);
         }
         return;
       }
       
       onUpdate();
     } catch (error: any) {
-      console.error("Error deleting receipt:", error);
-      alert(`Failed to delete receipt: ${error.message || "Unknown error"}`);
+      alert(`Failed to move receipt to bin: ${error?.message || "Unknown error"}`);
     }
-  };
+  }, [onUpdate]);
 
-  const handleRestore = async (id: string) => {
+  const handleRestore = useCallback(async (id: string) => {
     try {
       const { error } = await supabase
         .from("receipts")
@@ -160,17 +168,118 @@ export default function DashboardStats({ receipts, onUpdate }: { receipts: Recei
         .eq("id", id);
       
       if (error) {
-        console.error("Restore error:", error);
         alert(`Failed to restore receipt: ${error.message}`);
         return;
       }
       
       onUpdate();
     } catch (error: any) {
-      console.error("Error restoring receipt:", error);
-      alert(`Failed to restore receipt: ${error.message || "Unknown error"}`);
+      alert(`Failed to restore receipt: ${error?.message || "Unknown error"}`);
     }
-  };
+  }, [onUpdate]);
+
+  const handleViewReceipt = useCallback((receiptNumber: number) => {
+    router.push(`/receipt/${receiptNumber}`);
+  }, [router]);
+
+  const handleDownloadReceipt = async (receipt: Receipt) => {
+    setDownloadingId(receipt.id);
+    try {
+      // Fetch full receipt data
+      const { data, error } = await supabase
+        .from("receipts")
+        .select("*")
+        .eq("id", receipt.id)
+        .single();
+
+      if (error || !data) {
+        alert("Failed to fetch receipt data");
+        return;
+      }
+
+      // Create a temporary container for the receipt
+      const tempContainer = document.createElement('div');
+      tempContainer.style.position = 'fixed';
+      tempContainer.style.left = '-9999px';
+      tempContainer.style.top = '0';
+      tempContainer.style.width = '1122px';
+      tempContainer.style.height = '794px';
+      document.body.appendChild(tempContainer);
+
+      // Import ReceiptView dynamically
+      const { default: ReceiptView } = await import('@/components/ReceiptView');
+      const { createRoot } = await import('react-dom/client');
+
+      const receiptData = {
+        receipt_number: data.receipt_number,
+        receipt_date: new Date(data.receipt_date).toLocaleDateString("en-IN"),
+        student_name: data.student_name,
+        parent_name: data.parent_name,
+        program: data.program,
+        admission_number: data.admission_number || "",
+        enrollment_number: data.enrollment_number || "",
+        mobile_number: data.mobile_number,
+        month: data.month,
+        year: data.year || "2026-27",
+        fee_amount: data.fee_amount,
+        net_amount: data.net_amount,
+        cgst_amount: data.cgst_amount,
+        sgst_amount: data.sgst_amount,
+        total_amount: data.total_amount,
+        paid_amount: data.paid_amount,
+        balance_due: data.balance_due,
+        pay_mode: data.pay_mode,
+        bank_name: data.bank_name || "",
+        txn_number: data.txn_number || "",
+        txn_date: data.txn_date || "",
+        collected_by: data.collected_by,
+      };
+
+      // Render receipt in temp container
+      const root = createRoot(tempContainer);
+      root.render(ReceiptView({ data: receiptData }));
+
+      // Wait for render
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      const receiptElement = tempContainer.querySelector('#receipt-print');
+      if (!receiptElement) {
+        alert("Failed to render receipt");
+        document.body.removeChild(tempContainer);
+        return;
+      }
+
+      // Generate PDF
+      const canvas = await html2canvas(receiptElement as HTMLElement, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+        width: 1122,
+        height: 794,
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("landscape", "mm", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const margin = 10;
+      const availableWidth = pdfWidth - (2 * margin);
+      const availableHeight = pdfHeight - (2 * margin);
+
+      pdf.addImage(imgData, "PNG", margin, margin, availableWidth, availableHeight);
+      pdf.save(`Receipt_${data.receipt_number}.pdf`);
+
+      // Cleanup
+      root.unmount();
+      document.body.removeChild(tempContainer);
+    } catch (error: any) {
+      const errorMessage = error?.message || "Unknown error occurred";
+      alert(`Failed to download receipt: ${errorMessage}`);
+    } finally {
+      setDownloadingId(null);
+    }
+  };;
 
   return (
     <div className="space-y-6">
@@ -269,7 +378,7 @@ export default function DashboardStats({ receipts, onUpdate }: { receipts: Recei
                   <th className="p-3 text-left font-semibold">Month</th>
                   <th className="p-3 text-left font-semibold">Year</th>
                   <th className="p-3 text-right font-semibold">Total</th>
-                  <th className="p-3 text-right font-semibold">Actions</th>
+                  <th className="p-3 text-center font-semibold">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -302,26 +411,51 @@ export default function DashboardStats({ receipts, onUpdate }: { receipts: Recei
                       <td className="p-3 text-right font-semibold">
                         ₹{r.total_amount.toLocaleString()}
                       </td>
-                      <td className="p-3 text-right">
-                        {activeTab === "active" ? (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDelete(r.id)}
-                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleRestore(r.id)}
-                            className="text-green-600 hover:text-green-600 hover:bg-green-50"
-                          >
-                            <RotateCcw className="h-4 w-4" />
-                          </Button>
-                        )}
+                      <td className="p-3">
+                        <div className="flex items-center justify-center gap-1">
+                          {activeTab === "active" ? (
+                            <>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleViewReceipt(r.receipt_number)}
+                                className="text-blue-600 hover:text-blue-600 hover:bg-blue-50"
+                                title="View Receipt"
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleDownloadReceipt(r)}
+                                disabled={downloadingId === r.id}
+                                className="text-green-600 hover:text-green-600 hover:bg-green-50"
+                                title="Download Receipt"
+                              >
+                                <Download className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleDelete(r.id)}
+                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                title="Move to Bin"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </>
+                          ) : (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleRestore(r.id)}
+                              className="text-green-600 hover:text-green-600 hover:bg-green-50"
+                              title="Restore"
+                            >
+                              <RotateCcw className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -381,9 +515,52 @@ export default function DashboardStats({ receipts, onUpdate }: { receipts: Recei
                         {r.year}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center mb-3">
                       <p className="text-xs text-muted-foreground">Total Amount</p>
                       <p className="font-semibold text-lg">₹{r.total_amount.toLocaleString()}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {activeTab === "active" ? (
+                        <>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleViewReceipt(r.receipt_number)}
+                            className="flex-1 text-blue-600 hover:text-blue-600 hover:bg-blue-50"
+                          >
+                            <Eye className="h-4 w-4 mr-1" />
+                            View
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDownloadReceipt(r)}
+                            disabled={downloadingId === r.id}
+                            className="flex-1 text-green-600 hover:text-green-600 hover:bg-green-50"
+                          >
+                            <Download className="h-4 w-4 mr-1" />
+                            Download
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDelete(r.id)}
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10 h-8 w-8 p-0"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleRestore(r.id)}
+                          className="flex-1 text-green-600 hover:text-green-600 hover:bg-green-50"
+                        >
+                          <RotateCcw className="h-4 w-4 mr-1" />
+                          Restore
+                        </Button>
+                      )}
                     </div>
                   </div>
                 ))}

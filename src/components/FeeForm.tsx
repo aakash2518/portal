@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,14 +44,24 @@ const PROGRAMS = [
   "Gravida Bambino",
 ];
 
-export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeFormData) => void; isLoading: boolean }) {
+export default function FeeForm({ 
+  onSubmit, 
+  isLoading,
+  initialData,
+  isRenew = false
+}: { 
+  onSubmit: (data: FeeFormData) => void; 
+  isLoading: boolean;
+  initialData?: any;
+  isRenew?: boolean;
+}) {
   const [form, setForm] = useState<FeeFormData>({
-    student_name: "",
-    parent_name: "",
-    program: "",
-    admission_number: "",
-    enrollment_number: "",
-    mobile_number: "",
+    student_name: initialData?.student_name || "",
+    parent_name: initialData?.parent_name || "",
+    program: initialData?.program || "",
+    admission_number: initialData?.admission_number || "",
+    enrollment_number: initialData?.enrollment_number || "",
+    mobile_number: initialData?.mobile_number || "",
     month: "",
     year: "2026-27",
     fee_amount: "",
@@ -63,6 +73,21 @@ export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeF
   });
 
   const [customMonth, setCustomMonth] = useState("");
+
+  // Update form when initialData changes
+  useEffect(() => {
+    if (initialData) {
+      setForm(prev => ({
+        ...prev,
+        student_name: initialData.student_name || "",
+        parent_name: initialData.parent_name || "",
+        program: initialData.program || "",
+        admission_number: initialData.admission_number || "",
+        enrollment_number: initialData.enrollment_number || "",
+        mobile_number: initialData.mobile_number || "",
+      }));
+    }
+  }, [initialData]);
 
   const handleChange = (field: keyof FeeFormData, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -91,22 +116,47 @@ export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeF
   return (
     <Card className="max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle className="text-xl text-center">New Fee Receipt</CardTitle>
+        <CardTitle className="text-xl text-center">
+          {isRenew ? "🔄 Renew Fee Receipt" : "🆕 New Fee Receipt"}
+        </CardTitle>
+        {isRenew && initialData && (
+          <p className="text-sm text-center text-muted-foreground">
+            Renewing for: <strong>{initialData.student_name}</strong>
+          </p>
+        )}
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <Label>Student Name *</Label>
-            <Input required value={form.student_name} onChange={(e) => handleChange("student_name", e.target.value)} />
+            <Input 
+              required 
+              value={form.student_name} 
+              onChange={(e) => handleChange("student_name", e.target.value)}
+              disabled={isRenew && !!initialData}
+              className={isRenew && initialData ? "bg-muted" : ""}
+            />
           </div>
           <div className="space-y-1.5">
             <Label>Parent Name *</Label>
-            <Input required value={form.parent_name} onChange={(e) => handleChange("parent_name", e.target.value)} />
+            <Input 
+              required 
+              value={form.parent_name} 
+              onChange={(e) => handleChange("parent_name", e.target.value)}
+              disabled={isRenew && !!initialData}
+              className={isRenew && initialData ? "bg-muted" : ""}
+            />
           </div>
           <div className="space-y-1.5">
             <Label>Program *</Label>
-            <Select value={form.program} onValueChange={(v) => handleChange("program", v)}>
-              <SelectTrigger><SelectValue placeholder="Select program" /></SelectTrigger>
+            <Select 
+              value={form.program} 
+              onValueChange={(v) => handleChange("program", v)}
+              disabled={isRenew && !!initialData}
+            >
+              <SelectTrigger className={isRenew && initialData ? "bg-muted" : ""}>
+                <SelectValue placeholder="Select program" />
+              </SelectTrigger>
               <SelectContent>
                 {PROGRAMS.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
               </SelectContent>
@@ -114,15 +164,31 @@ export default function FeeForm({ onSubmit, isLoading }: { onSubmit: (data: FeeF
           </div>
           <div className="space-y-1.5">
             <Label>Admission Number</Label>
-            <Input value={form.admission_number} onChange={(e) => handleChange("admission_number", e.target.value)} />
+            <Input 
+              value={form.admission_number} 
+              onChange={(e) => handleChange("admission_number", e.target.value)}
+              disabled={isRenew && !!initialData}
+              className={isRenew && initialData ? "bg-muted" : ""}
+            />
           </div>
           <div className="space-y-1.5">
             <Label>Enrollment Number</Label>
-            <Input value={form.enrollment_number} onChange={(e) => handleChange("enrollment_number", e.target.value)} />
+            <Input 
+              value={form.enrollment_number} 
+              onChange={(e) => handleChange("enrollment_number", e.target.value)}
+              disabled={isRenew && !!initialData}
+              className={isRenew && initialData ? "bg-muted" : ""}
+            />
           </div>
           <div className="space-y-1.5">
             <Label>Mobile Number *</Label>
-            <Input required value={form.mobile_number} onChange={(e) => handleChange("mobile_number", e.target.value)} />
+            <Input 
+              required 
+              value={form.mobile_number} 
+              onChange={(e) => handleChange("mobile_number", e.target.value)}
+              disabled={isRenew && !!initialData}
+              className={isRenew && initialData ? "bg-muted" : ""}
+            />
           </div>
           <div className="space-y-1.5">
             <Label>Month *</Label>

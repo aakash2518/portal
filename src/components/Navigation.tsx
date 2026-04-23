@@ -25,8 +25,8 @@ export default function Navigation() {
               <Image 
                 src="/images/logo.png" 
                 alt="Sonehra Wellness Logo" 
-                width={80}
-                height={80}
+                width={90}
+                height={90}
                 className="object-contain"
                 priority
               />
