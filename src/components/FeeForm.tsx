@@ -42,6 +42,7 @@ const PROGRAMS = [
   "Hacer Evening",
   "Walk-in Daycare",
   "Gravida Bambino",
+  "Other"
 ];
 
 export default function FeeForm({ 
@@ -73,6 +74,7 @@ export default function FeeForm({
   });
 
   const [customMonth, setCustomMonth] = useState("");
+  const [customProgram, setCustomProgram] = useState("");
 
   // Update form when initialData changes
   useEffect(() => {
@@ -91,18 +93,22 @@ export default function FeeForm({
 
   const handleChange = (field: keyof FeeFormData, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
-    // Reset custom month when changing month selection
+    // Reset custom values when changing selections
     if (field === "month" && value !== "Other") {
       setCustomMonth("");
+    }
+    if (field === "program" && value !== "Other") {
+      setCustomProgram("");
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // If "Other" is selected, use custom month value
+    // If "Other" is selected, use custom values
     const finalForm = {
       ...form,
-      month: form.month === "Other" ? customMonth : form.month
+      month: form.month === "Other" ? customMonth : form.month,
+      program: form.program === "Other" ? customProgram : form.program
     };
     onSubmit(finalForm);
   };
@@ -162,6 +168,17 @@ export default function FeeForm({
               </SelectContent>
             </Select>
           </div>
+          {form.program === "Other" && (
+            <div className="space-y-1.5">
+              <Label>Custom Program *</Label>
+              <Input 
+                required 
+                value={customProgram} 
+                onChange={(e) => setCustomProgram(e.target.value)} 
+                placeholder="Enter custom program"
+              />
+            </div>
+          )}
           <div className="space-y-1.5">
             <Label>Admission Number</Label>
             <Input 
